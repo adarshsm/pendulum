@@ -447,7 +447,8 @@ def _get_iso_8601_week(
         year += 1
 
     fmt = "%Y-%j"
-    string = f"{year}-{ordinal}"
+    # %Y matches exactly four digits, so the year must be zero-padded (#1076).
+    string = f"{year:04d}-{ordinal}"
 
     dt = datetime.datetime.strptime(string, fmt)
 

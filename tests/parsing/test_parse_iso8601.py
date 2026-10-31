@@ -214,3 +214,20 @@ def test_parse_iso8601_duration_invalid():
     # Must include at least one element
     with pytest.raises(ValueError):
         parse_iso8601("P")
+
+
+@pytest.mark.parametrize(
+    ["text", "expected"],
+    [
+        ("2016-W34-6", date(2016, 8, 27)),
+        ("1000-W34-6", date(1000, 8, 23)),
+        ("0999-W34-6", date(999, 8, 24)),
+        ("0416-W34-6", date(416, 8, 27)),
+        ("0416W346", date(416, 8, 27)),
+        ("0416-W34", date(416, 8, 22)),
+        ("0004-W10-5", date(4, 3, 5)),
+    ],
+)
+def test_parse_iso8601_week_date_before_year_1000(text, expected):
+    # %Y matches exactly four digits, so the year must be zero-padded (#1076).
+    assert parse_iso8601(text) == expected
